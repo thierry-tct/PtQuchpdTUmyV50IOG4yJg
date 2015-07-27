@@ -1,6 +1,6 @@
 /***
 * Author: Titcheu Chekam Thierry
-*
+* 
 * This program gets the exchange rates from Yahoo Finance which is free.
 * xe.com licence don't allow to freely and automatically get the exchange rates,
 * from xe.com page source, it says: 
@@ -36,7 +36,7 @@ function insertToMongolab(json) {
 	var options_path = '/api/1/databases/' + my_db + '/collections/' + my_coll + '?apiKey=' + my_api_key;
 	var options = {
 		host: 'api.mongolab.com',
-	 	path: options_path,
+		path: options_path,
 		
 		//https default port 443
 		port: '443',	
@@ -72,12 +72,12 @@ function insertToMongolab(json) {
 	*/
 function useExchangeRate(currency_from, currency_to, rate) {	
 	var data = {
-    	"from": currency_from,
-    	"to": currency_to,
-    	"created_at": (new Date()).toString(),
+		"from": currency_from,
+		"to": currency_to,
+		"created_at": (new Date()).toString(),
 
 		//round rate to 2 decimals
-    	"rate": parseFloat(rate).toFixed(2).toString(),
+		"rate": parseFloat(rate).toFixed(2).toString(),
 	};
 	insertToMongolab(data);
 };
@@ -97,7 +97,7 @@ function getUseExchangeRate(currency_from, currency_to, num_runs_left, attemps_l
 	//using Yahoo finance API
 	var options = {
 		host: 'download.finance.yahoo.com',
-	 	path: options_path,
+		path: options_path,
 		port: '80',
 		method: 'GET',
 	};
@@ -135,64 +135,68 @@ function getUseExchangeRate(currency_from, currency_to, num_runs_left, attemps_l
 function consumerWorker() {
 	var http = require('http');
 	var options = {
-  		host: 'challenge.aftership.net',
-  		path: '/v1/beanstalkd',
-  		port: '9578',
-  		method: 'POST',
-  		headers: {'content-type': 'application/json;charset=utf-8', 
+		host: 'challenge.aftership.net',
+		path: '/v1/beanstalkd',
+		port: '9578',
+		method: 'POST',
+		headers: {'content-type': 'application/json;charset=utf-8', 
 				'aftership-api-key': 'a6403a2b-af21-47c5-aab5-a2420d20bbec'},
 	};
 	function beanstalkCallback(response) {
- 	 	var str = '';
- 	 	response.on('data', function(chunk) {
-    		str += chunk;
-  		});
+		var str = '';
+		response.on('data', function(chunk) {
+			str += chunk;
+		});
 		function getJobAndWork(err, conn) {
 			if (err) {
-    			console.log('Error connecting to beanstalkd.');
-    			console.log('Make sure that beanstalkd is running.');
-  			} else {
+				console.log('Error connecting to beanstalkd.');
+				console.log('Make sure that beanstalkd is running.');
+			} else {
+
+				//select tube
 				conn.watch(tube_name, function(err) {
 					if (err) {
-                		console.log('Error watching tube.');
-              		} else {
+						console.log('Error watching tube.');
+					} else {
 						console.log('watching tube ' + tube_name);
-                		conn.reserve(function(err, id, json) {
-          					if (err) {
-            					console.log('Error reserving job.');
-          					} else {
+
+						//pick a job from queue's tube 
+						conn.reserve(function(err, id, json) {
+							if (err) {
+								console.log('Error reserving job.');
+							} else {
 								var currency_from = JSON.parse(json).from;
 								var currency_to = JSON.parse(json).to;
 								console.log('Consumed Job ' + id);
-            					console.log('Rate from ' + currency_from + ' to ' + currency_to);
+								console.log('Rate from ' + currency_from + ' to ' + currency_to);
 
 								//process the Job
 								getUseExchangeRate(currency_from , currency_to, NUM_RESULTS, ATTEPTS);
 	
 								//Wheather Fail or succeed work, the job is reput to the tube
-            					conn.release(id, 0, 0, function(err) {	
-              						if (err) {
-                						console.log('Error releasing job.');
-              						} else {
-                						console.log('Job released back to tube');
-                						conn.end();
-              						}
-            					});
-          					}
-        				});
-              		}
-      			});
+								conn.release(id, 0, 0, function(err) {	
+									if (err) {
+										console.log('Error releasing job.');
+									} else {
+										console.log('Job released back to tube');
+										conn.end();
+									}
+								});
+							}
+						});
+					}
+				});
 			}
 		}
 
-  		response.on('end', function() {
+		response.on('end', function() {
 			//Use beanstalkd client to get a job for work
 			var bs = require('./node-beanstalkd');
 			var client = new bs.Client();
 			var host = JSON.parse(str).data.host;
 			var port = JSON.parse(str).data.port;
 			client.connect(host + ':' + port, getJobAndWork); 
-  		});
+		});
 	}
 
 	//make an http POST request to the beanstakd server, 
