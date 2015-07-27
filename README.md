@@ -1,11 +1,9 @@
 ## Quick Description of my Solution
 ---
 
-* I used Yahoo finance API(http://finance.yahoo.com/d/quotes.csv?s=HKDUSD=X&f=l1&e=.csv) to obtain exchange rates.
-* I used both producer_worker.js and beanstalk console from http://vviqueue.com/index.php?server=challenge.aftership.net:11300 to 'SEED' the data.
-* Do NOT fork, as other candidates would be able to see your solution easily.
-* Use [beanstalkd](http://kr.github.io/beanstalkd/), mongodb, nodejs
-* Get the xe.com exchange rate, store it in mongodb for every 1 min.
+* I used Yahoo finance API(http://finance.yahoo.com/d/quotes.csv?s=HKDUSD=X&f=l1&e=.csv) to obtain exchange rates as xe.com has <!-- WARNING: Automated extraction of rates is prohibited under the Terms of Use. -->.
+* To 'SEED' the data, I used both producer_worker.js and beanstalk console from http://vviqueue.com/index.php?server=challenge.aftership.net:11300 .
+* 
 
 ---
 ---
