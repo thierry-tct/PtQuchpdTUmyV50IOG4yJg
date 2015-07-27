@@ -5,6 +5,7 @@
 * To `SEED` the data, I used both producer_worker.js and beanstalk console from http://vviqueue.com/index.php?server=challenge.aftership.net:11300 .
 * I used [node-beanstalkd](https://github.com/robinjoseph08/node-beanstalkd) client to execute request to the beanstalkd server. (I have `require('./node-beanstalkd');` in the code and added the library file `node-beanstalkd.js` in this repository supposing that node-beanstalkd is not installed.) 
 * In the worker and producer I first do POST request to http://challenge.aftership.net:9578/v1/beanstalkd to get the information of the host and port of the beanstalkd server that will be accessed later by the node-beanstalkd Client.
+* The work result is stored into mongolab database: `currency_conversion_rate`, collection: `currency_conversion_rate_coll`, API-Key: `JbZiHSs9zVVkrKHbKUGQC82a3LTwmoIW`.
 
 ---
 ---
