@@ -1,7 +1,7 @@
 ## Quick Description of my Solution
 ---
 
-* DOWNLOAD this repository to your own Github public repository.
+* I used Yahoo finance API(http://finance.yahoo.com/d/quotes.csv?s=HKDUSD=X&f=l1&e=.csv) to obtain exchange rates.
 * Create a new repo, name it by using this shortGUID generator
 * Do NOT fork, as other candidates would be able to see your solution easily.
 * Use [beanstalkd](http://kr.github.io/beanstalkd/), mongodb, nodejs
