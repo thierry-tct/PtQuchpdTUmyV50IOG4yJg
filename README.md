@@ -3,7 +3,8 @@
 
 * I used Yahoo finance API (http://finance.yahoo.com/d/quotes.csv?s=HKDUSD=X&f=l1&e=.csv) to obtain exchange rates as [xe.com](http://www.xe.com/) has `<!-- WARNING: Automated extraction of rates is prohibited under the Terms of Use. -->`.
 * To `SEED` the data, I used both producer_worker.js and beanstalk console from http://vviqueue.com/index.php?server=challenge.aftership.net:11300 .
-* 
+* I used [node-beanstalkd](https://github.com/robinjoseph08/node-beanstalkd) client to execute request to the beanstalkd server. 
+* In the worker and producer I first do POST request to http://challenge.aftership.net:9578/v1/beanstalkd to get the information of the host and port of the beanstalkd server that will be accessed later by the node-beanstalkd Client.
 
 ---
 ---
