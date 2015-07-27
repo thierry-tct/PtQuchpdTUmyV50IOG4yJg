@@ -152,7 +152,7 @@
         return this.parse_body();
       } else {
         this.complete = true;
-        return this.complete;
+        return this.complete; 
       }
     }
   };
